@@ -1,10 +1,10 @@
 require 'prime'
 
 def gap(gap_between, start, last)
-  first_prime = nil
-  second_prime = nil
   current = start
   loop do
+    first_prime = nil
+    second_prime = nil
     loop do
       first_prime = current if Prime.prime?(current)
       break if first_prime
@@ -19,17 +19,8 @@ def gap(gap_between, start, last)
     current = second_prime
     break if current > last || second_num > last
     return [first_prime, second_prime] if second_prime - first_prime == gap_between
-    first_prime = nil
-    second_prime = nil
+    nil
   end
 end
 
-
-
-p gap(2,100,110) # [101, 103]
-p gap(8,300,400) # [359, 367]
-
-p gap(4,100,110)# [103, 107])
-p gap(6,100,110)# nil)
-p gap(8,300,400)# [359, 367])
-p gap(10,300,400)# [337, 347])
+p gap(2, 3, 6)

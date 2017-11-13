@@ -1,46 +1,27 @@
-BRACES = {'(' => "\)", '{' => "\}", '[' => "\]"}
-INVALID_STARTING = [')', '}', ']']
+# loop through its characters;
+# when you see a {[(, put it into a stack (Ruby array can work as a stack);
+# when you see a }]), take a look at the last character in the array and see whether it is a match 
+#(for example, the last element in the array is [, and you have a ], that's a match). 
+#If it is a match, pop the last element in the array; 
+#any time you see one mismatch, the string is bad, and you can stop the loop.
 
-require 'pry'
+OPENING = ['(', '{', '[']
+CLOSING = [')', '}', ']']
+BRACES = {'(' => "\)", '{' => "\}", '[' => "\]"}
 
 def valid_braces(str)
-  grouping = ''
-  paren = 0
-  curly = 0
-  bracket = 0
-  count = 0
-  start_group = 0
-  braces_arr = str.chars
-  len = 0
-  char_arr = str.chars
-  loop do
-    return false if INVALID_STARTING.any? { |sym| sym == char_arr[0]}
-    end_of_group = char_arr.join =~ /#{Regexp.quote(BRACES[char_arr[0]])}/
-    return false if end_of_group == nil
-    grouping = char_arr[0..end_of_group]
-    char_arr.rotate!(end_of_group + 1)
-    count += end_of_group + 1
-    break if count == str.length
+  el = []
+  str.chars.each do |char|
+    char == BRACES[el[-1]] ? el.pop : el.push(char)
   end
-
-  grouping.each do |char|
-    paren += 1 if char == '('
-    paren -= 1 if char == ')'
-
-    curly += 1 if char == '{'
-    curly -= 1 if char == '}'
-
-    bracket += 1 if char == '['
-    bracket -= 1 if char == ']'
-
-    return false if [paren, curly, bracket].any? { |total| total < 0}
-  end
-
-  return true if [paren, curly, bracket].any? { |total| total == 0}
+  (el.empty? ? true : false)
 end
 
-p valid_braces("([{}]){}[]")   #=>  True
-p valid_braces "([{}])"   #=>  True
-p valid_braces "(}"       #=>  False
-p valid_braces "[(])"     #=>  False
-p valid_braces "[({})](]" #=>  False
+p valid_braces("()") == true
+p valid_braces("({[]})") == true
+p valid_braces("({[]})(){}") == true
+p valid_braces("[]{}[]()") == true
+p valid_braces("()") == true
+p valid_braces(")") == false
+p valid_braces("(") == false
+p valid_braces(")(") == false

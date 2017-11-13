@@ -13,10 +13,8 @@ def valid_braces(str)
   char_arr = str.chars
   loop do
     end_of_group = char_arr.join =~ /#{Regexp.quote(BRACES[char_arr[0]])}/ #bug is coming from str
-    p grouping = char_arr[0..end_of_group]
+    grouping = char_arr[0..end_of_group]
     char_arr.rotate!(end_of_group + 1)
-    count += 1
-    break if count == 4
   end
   
 

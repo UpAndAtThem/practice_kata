@@ -1,4 +1,5 @@
 BRACES = {'(' => "\)", '{' => "\}", '[' => "\]"}
+INVALID_STARTING = [')', '}', ']']
 
 require 'pry'
 
@@ -12,9 +13,12 @@ def valid_braces(str)
   len = 0
   char_arr = str.chars
   loop do
-    end_of_group = char_arr.join =~ /#{Regexp.quote(BRACES[char_arr[0]])}/ #bug is coming from str
+    return false if INVALID_STARTING.any? { |sym| sym == char_arr[0]}
+    end_of_group = char_arr.join =~ /#{Regexp.quote(BRACES[char_arr[0]])}/
     grouping = char_arr[0..end_of_group]
     char_arr.rotate!(end_of_group + 1)
+    count += end_of_group + 1
+    break if count == str.length
   end
   
 
@@ -37,7 +41,7 @@ def valid_braces(str)
 end
 
 
-valid_braces("([{}]){}[]")   #=>  True
+p valid_braces("([{}]){}[]")   #=>  True
 # p valid_braces "([{}])"   #=>  True
 # p valid_braces "(}"       #=>  False
 # p valid_braces "[(])"     #=>  False

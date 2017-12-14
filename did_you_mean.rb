@@ -18,8 +18,14 @@ class Dictionary
 
     num_letters_similar_hash.max_by{|k,v| v}[0]
   end
+
+  def spelled_correctly?(str)
+    @words.any? { |word| word == str}
+  end
 end
 
 dictionary_instance = Dictionary.new(%w(aardvark anteater bungee bystander cat consternation direct dunce evergreen evaporate flim flam))
 
 dictionary_instance.closest_word('bistandr') # returns bystander
+
+dictionary_instance.spelled_correctly?('cat') # returns false

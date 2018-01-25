@@ -15,11 +15,25 @@ def str_increment(string)
     return string + '1'
   end
   alpha_num_partition_arr = split_end_numbers(string)
-  alpha_num_partition_arr[1] = split_leading_zeros(alpha_num_partition_arr[1]) if alpha_num_partition_arr[1][0] == '0'
-  alpha_num_partition_arr
+  if alpha_num_partition_arr[1][0] == '0' 
+    return alpha_num_partition_arr[0] + (alpha_num_partition_arr[1].to_i + 1).to_s if alpha_num_partition_arr[1].chars.all? {|char| char == '0'}  #fixbug in this code.  you need to account for mult leading zeros
+    alpha_num_partition_arr[1] = split_leading_zeros(alpha_num_partition_arr[1])
+    
+    if alpha_num_partition_arr[1][1].chars.all? {|num| num == '9'}
+      alpha_num_partition_arr[1][0] = alpha_num_partition_arr[1][0][1..-1]
+    end
+
+    alpha_num_partition_arr[1][1] = (alpha_num_partition_arr[1][1].to_i + 1).to_s
+    return alpha_num_partition_arr.flatten.join
+
+  else
+    alpha_num_partition_arr[1] = (alpha_num_partition_arr[1].to_i + 1).to_s
+    alpha_num_partition_arr.join
+  end
+
 end
 
-p str_increment("foobar0011") #== 'foobar1'
-# p str_increment "foobar001" == 'foobar002'
-# p str_increment '' == '1'
-# p str_increment 'foobar000' == 'foobar001'
+str_increment("foobar00") #== 'foobar1'
+p str_increment("foobar001") == 'foobar002'
+p str_increment('') == '1'
+p str_increment('foobar000') == 'foobar001'

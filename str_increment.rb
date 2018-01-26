@@ -20,7 +20,10 @@ def str_increment(string)
 
   if alpha_num_partition_arr[1][0] == '0' 
 
-    return alpha_num_partition_arr[0] + alpha_num_partition_arr[1][1..-1] + '1' if alpha_num_partition_arr[1].chars.all? {|char| char == '0'} 
+    if alpha_num_partition_arr[1].chars.all? {|char| char == '0'}
+      return alpha_num_partition_arr[0] + alpha_num_partition_arr[1][1..-1] + '1'
+    end
+
     alpha_num_partition_arr[1] = split_leading_zeros(alpha_num_partition_arr[1])
     
     if alpha_num_partition_arr[1][1].chars.all? {|num| num == '9'}
@@ -28,7 +31,8 @@ def str_increment(string)
     end
 
     alpha_num_partition_arr[1][1] = (alpha_num_partition_arr[1][1].to_i + 1).to_s
-    return alpha_num_partition_arr.flatten.join
+
+    alpha_num_partition_arr.flatten.join
   else
 
     alpha_num_partition_arr[1] = (alpha_num_partition_arr[1].to_i + 1).to_s
@@ -36,4 +40,4 @@ def str_increment(string)
   end
 end
 
-p str_increment("foobar99999") #== 'foobar2000'
+p str_increment("foobar099999") #== 'foobar2000'

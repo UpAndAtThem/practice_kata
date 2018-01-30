@@ -5,9 +5,7 @@
 #If it is a match, pop the last element in the array; 
 #any time you see one mismatch, the string is bad, and you can stop the loop.
 
-OPENING = ['(', '{', '[']
-CLOSING = [')', '}', ']']
-BRACES = {'(' => "\)", '{' => "\}", '[' => "\]"}
+BRACES = {'(' => ")", '{' => "}", '[' => "]"}
 
 def valid_braces(str)
   el = []

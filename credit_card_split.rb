@@ -27,15 +27,15 @@ def expired?(card_expiration)
 
   earlier_month = card_expiration[0] < current_date[0]
   earlier_year = card_expiration[1] < current_date[1]
-  same_year = card_expiration[1] == current_date[1]
+  same_year = card_expiration[1] == card_expiration[1]
 
   if earlier_year
     true
   elsif earlier_month && same_year
     true
-  elsif current_date[0] < card_expiration[0]
-    false
-  elsif current_date[1] < card_expiration[1]
+  else
     false
   end
 end
+
+p expired? "02-18"

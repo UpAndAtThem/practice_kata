@@ -24,10 +24,16 @@ def int_to_word(int)
     end
   end
 
-  result_arr = result.split""
-  result_arr.pop if result_arr[-1] == '-'
-  result_arr.join
+  remove_trailing_dash result
 end
 
+def remove_trailing_dash(word)
+  word.chomp("-")
+end
 
 p int_to_word 999
+p int_to_word 15
+p int_to_word 88
+p int_to_word 33
+p int_to_word 339
+p int_to_word 590

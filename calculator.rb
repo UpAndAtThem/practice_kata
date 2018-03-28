@@ -3,8 +3,8 @@ require 'pry'
 OPERATIONS = %w(add subtract divide multiply).freeze
 
 def calculator
-  num1 = get_number.to_i
-  num2 = get_number.to_i
+  num1 = choose_number.to_i
+  num2 = choose_number.to_i
 
   operation = choose_operation
   choice operation, num1, num2

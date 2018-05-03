@@ -67,13 +67,13 @@ end
 def announce_winner(player_count, computer_count)
   if player_count > computer_count && player_count < 22 ||
      computer_count > 21 && player_count < 22
-    puts "\n\ncongrats you win player: #{player_count}" +
-          " to computer: #{computer_count}"
+    puts "\ncongrats you win. player: #{player_count}" +
+          " to computer: #{computer_count}\n\n\n\n\n\n\n"
   elsif player_count == computer_count
     puts 'it\'s a tie'
   else
-    puts "sorry, you lost computer: #{computer_count}" +
-          " to player: #{player_count}"
+    puts "\nsorry, you lost. computer: #{computer_count}" +
+          " to player: #{player_count}\n\n\n\n\n\n\n"
   end
 end
 
@@ -85,6 +85,7 @@ def display_cards_and_points(hand, points, user)
   else
     puts "The computer has #{points} points"
   end
+  puts "\n"
 end
 
 deck = init_deck
@@ -113,7 +114,7 @@ end
 
 loop do
   computer_count = count_points(computer_cards)
-
+  system 'clear'
   break if computer_count >= 17 || player_count > 21
   hit computer_cards, deck
 end

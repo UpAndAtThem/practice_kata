@@ -65,11 +65,25 @@ def hit(hand, deck)
 end
 
 def announce_winner(player_count, computer_count)
-  system 'clear'
-  if player_count > computer_count && player_count < 22
-    puts "congrats you win #{player_count} to #{computer_count}"
+  if player_count > computer_count && player_count < 22 ||
+     computer_count > 21 && player_count < 22
+    puts "\n\ncongrats you win player: #{player_count}
+          to computer: #{computer_count}"
+  elsif player_count == computer_count
+    puts 'it\'s a tie'
   else
-    puts "sorry, you lost #{computer_count} to #{player_count}"
+    puts "sorry, you lost computer: #{computer_count}
+          to player: #{player_count}"
+  end
+end
+
+def display_cards_and_points(hand, points, user)
+  print "#{user}s hand: "
+  p hand
+  if user == 'player'
+    puts "You have #{points} points"
+  else
+    puts "The computer has #{points} points"
   end
 end
 
@@ -77,30 +91,34 @@ deck = init_deck
 
 player_cards = deal_hand deck
 computer_cards = deal_hand deck
-player_count = nil
-computer_count = nil
+player_count = count_points player_cards
+computer_count = count_points computer_cards
 
 loop do
   system 'clear'
-  p player_cards
-  player_count = count_points(player_cards)
-  p player_count
+  display_cards_and_points(player_cards, player_count, 'player')
   break if bust? player_cards
+
   prompt 'Hit or Stay'
   answer = gets.chomp
-  break if %w(Stay stay s S).include?(answer) || bust?(player_cards)
+
+  break if %w(Stay stay s S).include?(answer)
   next unless %(hit Hit h H).include? answer
+
   hit(player_cards, deck)
+  player_count = count_points player_cards
+
   system 'clear'
 end
 
 loop do
   computer_count = count_points(computer_cards)
-  break if computer_count >= 17
-  p computer_cards
-  p computer_count
+
+  break if computer_count >= 17 || player_count > 21
   hit computer_cards, deck
-  sleep 1
 end
+
+display_cards_and_points player_cards, player_count, 'player'
+display_cards_and_points computer_cards, computer_count, 'computer'
 
 announce_winner(player_count, computer_count)

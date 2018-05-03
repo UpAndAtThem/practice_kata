@@ -67,13 +67,13 @@ end
 def announce_winner(player_count, computer_count)
   if player_count > computer_count && player_count < 22 ||
      computer_count > 21 && player_count < 22
-    puts "\n\ncongrats you win player: #{player_count}
-          to computer: #{computer_count}"
+    puts "\n\ncongrats you win player: #{player_count}" +
+          " to computer: #{computer_count}"
   elsif player_count == computer_count
     puts 'it\'s a tie'
   else
-    puts "sorry, you lost computer: #{computer_count}
-          to player: #{player_count}"
+    puts "sorry, you lost computer: #{computer_count}" +
+          " to player: #{player_count}"
   end
 end
 
@@ -101,7 +101,7 @@ loop do
 
   prompt 'Hit or Stay'
   answer = gets.chomp
-
+  system 'clear'
   break if %w(Stay stay s S).include?(answer)
   next unless %(hit Hit h H).include? answer
 

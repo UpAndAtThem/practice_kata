@@ -1,26 +1,3 @@
-#order weight
-# def order_weight(string)
-#   sorted = string.split.sort_by do |weight|
-#     weight.split("").map(&:to_i).reduce(&:+)
-#   end.join(" ")
-# end
-require 'pry'
-
-# def order_weight(string)
-#   string_arr = string.split
-#   result_arr = []
-#   loop do
-#     result = string_arr.max_by do |num_string|
-#       num_string.split("").map(&:to_i).reduce(&:+)
-#     end
-  
-#     result_arr << result
-#     string_arr.delete result
-#     break if string_arr.empty?
-#   end
-#   p result_arr
-# end
-
 def order_weight(string)
   result_hsh = Hash.new([])
   string_arr = string.split(" ")

@@ -1,18 +1,14 @@
 def order_weight(string)
-  result_hsh = Hash.new([])
+  result_hsh = Hash.new {|h,k| h[k] = [] }
   string_arr = string.split(" ")
   count = 0
 
   loop do
     weight = string_arr[count].split("").map(&:to_i).reduce(&:+)
     
-    if result_hsh[weight].empty?
-      result_hsh[weight] = [string_arr[count]]
-    else
-      result_hsh[weight] << string_arr[count]
-    end
-
+    result_hsh[weight] << string_arr[count]
     count += 1
+
     break if count == string_arr.size
   end
 
@@ -31,4 +27,4 @@ end
 
 weight_list = "56 65 74 100 99 68 86 180 90"
 
-order_weight weight_list
+p order_weight weight_list

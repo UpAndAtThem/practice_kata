@@ -14,15 +14,10 @@ def strip_url_params(url, to_delete = [])
 end
 
 def remove_duplicate_params(query)
-  non_duplicate = {}
-
   query.scan(/(([\w])=\w+)/)
-       .each_with_object([]) do |match, keys_arr|
+       .each_with_object([])
+       .with_object({}) do |(match, keys_arr), non_duplicate|
          non_duplicate[match[1]] = match[0] unless keys_arr.include?(match[1])
          keys_arr << match[1]
        end
-
-  non_duplicate
 end
-
-p strip_url_params("www.codeschool.com?a=1&b=hello&c=2&b=2", ['b'])

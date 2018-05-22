@@ -9,8 +9,7 @@ def strip_url_params(url, to_delete = [])
 
   result = domain + '?' + non_duplicate.values.join('&')
 
-  return result[0..-2] if result[-1] == '?'
-  result
+  result[-1] == '?' ? result[0..-2] : result
 end
 
 def remove_duplicate_params(query)

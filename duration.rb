@@ -28,15 +28,9 @@ def time_in_words(years, days, hours, minutes, seconds)
 end
 
 def joinor(arr, symbol = ',', conjunction = 'and')
-  return arr[0] if arr.size == 1
-
-  arr.each_with_index.with_object('') do |(time_measurement, index), result|
-    result << if index < arr.size - 2
-                "#{time_measurement}#{symbol} "
-              elsif index < arr.size - 1
-                "#{time_measurement} "
-              else
-                "#{conjunction} #{time_measurement}"
-              end
+  if arr.size > 1
+    arr[0...-1].join("#{symbol} ") + " #{conjunction} " + arr[-1]
+  else
+    arr[0]
   end
 end

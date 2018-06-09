@@ -15,9 +15,11 @@ end
 
 
 def fib_recursion(terminating_num, arr)
-  arr += [arr[-1] + arr[-2]] if arr[-1] < terminating_num
+  arr += [arr[-1] + arr[-2]]
  
   return arr if arr[-1] > terminating_num
 
   fib_recursion(terminating_num, arr)
 end
+
+p fib_recursion(39, [0,1])

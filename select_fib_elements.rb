@@ -12,3 +12,12 @@ def select_fib_elements(arr)
   fib_arr = fib(arr.size)
   result = arr.select.with_index { |elem, index| fib_arr.include? index }
 end
+
+
+def fib_recursion(terminating_num, arr)
+  arr += [arr[-1] + arr[-2]] if arr[-1] < terminating_num
+ 
+  return arr if arr[-1] > terminating_num
+
+  fib_recursion(terminating_num, arr)
+end

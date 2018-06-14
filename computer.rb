@@ -12,8 +12,9 @@ def computer(expression)
 end
 
 def evaluate_first_operation(expression)
-  expression.sub!(/(-?\w+) (divided by|\w+) (-?\w+)/) do |match|
+  regex = get_regex(expression)
 
+  expression.sub!(regex) do |match|
     num1 = $1.to_i
     num2 = $3.to_i
     operator = $2
@@ -33,4 +34,12 @@ def convert_expression(expression)
   end
 end
 
-computer "ten times ten times ten times two plus one" #=> "2001"
+def get_regex(expression)
+  if expression.include?("divided") || expression.include?("times")
+    /(-?\w+) (divided by|times) (-?\w+)/
+  else
+    /(-?\w+) (\w+) (-?\w+)/
+  end
+end
+
+computer "six plus ten divided by two" #=> "11"

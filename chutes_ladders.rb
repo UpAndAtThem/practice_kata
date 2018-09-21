@@ -18,3 +18,42 @@
 #   go down
 #   go up
 
+module Displayable
+
+end
+
+class Player
+  def initialize
+
+  end
+
+  def move
+
+  end
+end
+
+class ChutesLaddersGame
+  include Displayable
+
+  def initialize
+
+  end
+
+  def play
+
+  end
+end
+
+class Spinner
+  def spin
+
+  end
+end
+
+class Square
+
+end
+
+class Board
+
+end

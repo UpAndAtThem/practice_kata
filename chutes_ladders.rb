@@ -19,12 +19,13 @@
 #   go up
 
 # set number of players
-# players move
-#  loop over each player
-#    player spin
-#    player move
-#    check for winner
-# winner when player lands on square 100 exactly.
+# set player names
+  # players move
+  #  loop over each player
+  #    player spins
+  #    player moves
+  #    check for winner
+  #  loop over players until winner when player lands on square 100 exactly.
 
 require 'pry'
 
@@ -33,6 +34,8 @@ module Displayable
 end
 
 class Player
+  attr_accessor :name
+
   def initialize(name)
     @name = name
   end
@@ -45,6 +48,7 @@ end
 class ChutesLaddersGame
   include Displayable
   attr_reader :players, :spinner
+
   def initialize
     @spinner = Spinner.new
     @players = set_players
@@ -70,8 +74,27 @@ class ChutesLaddersGame
     end
   end
 
+  def valid_name?(name)
+    !name.strip.empty?
+  end
+
+  def set_name(player)
+    loop do
+      print "#{player.name} what is your name?: "
+      name = gets.chomp
+
+      if valid_name? name
+        player.name = name 
+        break
+      end
+      puts "That is an invalid name"
+    end
+  end
+
   def set_players_name
-    binding.pry
+    players.each do |player|
+      set_name player
+    end
   end
 
   def play

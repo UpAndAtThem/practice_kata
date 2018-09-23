@@ -28,9 +28,29 @@
   #  loop over players until winner when player lands on square 100 exactly.
 
 require 'pry'
+require 'yaml'
 
 module Displayable
 
+  def show_next_six(player)
+    possible_landings = board.next_six player
+  end
+
+  def position_unobstructed(player)
+    [ " ___________________________",
+     "| \\               \\         |",
+     "|  \\---------------\\        |",
+     "|   \\               \\       |",
+     "|    \\               \\      |",
+     "|     \\---------------\\     |",
+     "|      \\               \\    |",
+     "|       \\               \\   |",
+     "|        \\---------------\\  |",
+     "|         \\               \\ |",
+     "|          \\               \\|",
+     "|            #{player.position}              |",
+     "|___________________________"]
+   end
 end
 
 class Player
@@ -114,6 +134,7 @@ class ChutesLaddersGame
   def game_loop
     loop do
       players.each do |player|
+        show_next_six player
         player_spin(player)
 
         if player.rolled_position > 100
@@ -123,9 +144,10 @@ class ChutesLaddersGame
 
         board.advance(player)
         player.position = player.rolled_position
-        puts player.position
+        puts "#{player.name} = #{player.position}"
         return if winner?
       end
+  
       #loop over each player
         # player spins
         # player moves
@@ -194,6 +216,10 @@ class Board
 
     def [](position)
       squares[position - 1]
+    end
+
+    def next_six(player)
+      squares.slice(player.position, (player.position + 6))
     end
 end
 

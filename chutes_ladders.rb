@@ -34,7 +34,7 @@ module Displayable
 end
 
 class Player
-  attr_accessor :name
+  attr_accessor :name, :spin, :position
 
   def initialize(name)
     @name = name
@@ -47,9 +47,10 @@ end
 
 class ChutesLaddersGame
   include Displayable
-  attr_reader :players, :spinner
+  attr_reader :players, :spinner, :board
 
   def initialize
+    @board = Board.new
     @spinner = Spinner.new
     @players = set_players
   end
@@ -97,8 +98,29 @@ class ChutesLaddersGame
     end
   end
 
+  def player_spin(player)
+    player.spin = spinner.spin
+  end
+
+  def game_loop
+    loop do
+      players.each do |player|
+        player_spin(player)
+        board.advance(player)
+        binding.pry
+      end
+      #loop over each player
+        # player spins
+        # player moves
+        # check if won
+    end
+  end
+
   def play
     set_players_name
+    game_loop
+    # display_winner
+    # play again?
   end
 end
 
@@ -113,7 +135,8 @@ class Spinner
 end
 
 class Square
-  def initialize(players)
+  def initialize(number)
+    @number = number
     @players = []
   end
 
@@ -123,7 +146,15 @@ class Square
 end
 
 class Board
+    def initialize
+      @squares = (1..100).map do |number|
+        Square.new number
+      end
+    end
 
+    def advance(player)
+
+    end
 end
 
 game = ChutesLaddersGame.new

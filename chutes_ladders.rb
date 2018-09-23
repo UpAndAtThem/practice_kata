@@ -38,6 +38,11 @@ class Player
 
   def initialize(name)
     @name = name
+    @position = 0
+  end
+
+  def rolled_position
+    position + spin
   end
 
   def move
@@ -102,12 +107,24 @@ class ChutesLaddersGame
     player.spin = spinner.spin
   end
 
+  def winner?
+    players.any? { |player| player.position == 100}
+  end
+
   def game_loop
     loop do
       players.each do |player|
         player_spin(player)
+
+        if player.rolled_position > 100
+          player.position = 80
+          next
+        end
+
         board.advance(player)
-        binding.pry
+        player.position = player.rolled_position
+        puts player.position
+        return if winner?
       end
       #loop over each player
         # player spins
@@ -119,6 +136,7 @@ class ChutesLaddersGame
   def play
     set_players_name
     game_loop
+    puts "you win!"
     # display_winner
     # play again?
   end
@@ -135,9 +153,19 @@ class Spinner
 end
 
 class Square
+  attr_reader :players
+
   def initialize(number)
     @number = number
     @players = []
+  end
+
+  def add(player)
+    players << player
+  end
+
+  def remove(player)
+    players.delete player
   end
 
   def add_player(player)
@@ -146,14 +174,26 @@ class Square
 end
 
 class Board
+    attr_reader :squares
+
     def initialize
       @squares = (1..100).map do |number|
         Square.new number
       end
     end
 
-    def advance(player)
+    def remove_from_current_square(player)
+      self[player.position].remove player
+    end
 
+    def advance(player)
+      remove_from_current_square(player) unless player.position.zero?
+      landed_on_square = self[player.rolled_position]
+      landed_on_square.add(player)
+    end
+
+    def [](position)
+      squares[position - 1]
     end
 end
 

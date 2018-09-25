@@ -31,12 +31,26 @@ require 'pry'
 require 'yaml'
 
 module Displayable
+  def display_line_positions
+    system 'clear'
+    players.count.times do |player_index|
+      if players[player_index].position.zero?
+        puts players[player_index].name[0]
+      else
+        puts "#{" " * ((players[player_index].position) - 1)}#{players[player_index].name[0]}"
+      end
+    end
+    puts "#{" " + "-" * 100}"
+    gets
+    system 'clear'
+  end
 
   def show_next_six(player)
     possible_landings = board.next_six player
+
   end
 
-  def position_unobstructed(player)
+  def bottom_latter(player)
     [ " ___________________________",
      "| \\               \\         |",
      "|  \\---------------\\        |",
@@ -75,9 +89,9 @@ class ChutesLaddersGame
   attr_reader :players, :spinner, :board
 
   def initialize
-    @board = Board.new
     @spinner = Spinner.new
     @players = set_players
+    @board = Board.new(players.dup)
   end
 
   def set_num_players
@@ -134,17 +148,19 @@ class ChutesLaddersGame
   def game_loop
     loop do
       players.each do |player|
+        display_line_positions
         show_next_six player
         player_spin(player)
 
         if player.rolled_position > 100
+          board.remove_from_current_square player
           player.position = 80
-          next
+          board.add_to_square 80, player
         end
 
         board.advance(player)
         player.position = player.rolled_position
-        puts "#{player.name} = #{player.position}"
+        #puts "#{player.name} = #{player.position}"
         return if winner?
       end
   
@@ -177,9 +193,9 @@ end
 class Square
   attr_reader :players
 
-  def initialize(number)
+  def initialize(number, players = [])
     @number = number
-    @players = []
+    @players = players
   end
 
   def add(player)
@@ -198,9 +214,13 @@ end
 class Board
     attr_reader :squares
 
-    def initialize
-      @squares = (1..100).map do |number|
-        Square.new number
+    def initialize(players)
+      @squares = (0..100).map do |number|
+        if number == 0
+          Square.new number, players
+        else
+          Square.new number
+        end
       end
     end
 
@@ -208,14 +228,18 @@ class Board
       self[player.position].remove player
     end
 
+    def add_to_square(square, player)
+      self[square].players << player
+    end
+
     def advance(player)
-      remove_from_current_square(player) unless player.position.zero?
+      remove_from_current_square(player)
       landed_on_square = self[player.rolled_position]
       landed_on_square.add(player)
     end
 
     def [](position)
-      squares[position - 1]
+      squares[position]
     end
 
     def next_six(player)

@@ -27,6 +27,11 @@
   #    check for winner
   #  loop over players until winner when player lands on square 100 exactly.
 
+# Roll
+# move to square
+# check square status
+# add player to square
+
 require 'pry'
 require 'yaml'
 
@@ -37,12 +42,11 @@ module Displayable
       if players[player_index].position.zero?
         puts players[player_index].name[0]
       else
-        puts "#{" " * ((players[player_index].position) - 1)}#{players[player_index].name[0]}"
+        puts "#{" " * ((players[player_index].position))}#{players[player_index].name[0]}"
       end
     end
     puts "#{" " + "-" * 100}"
     gets
-    system 'clear'
   end
 
   def show_next_six(player)
@@ -138,11 +142,24 @@ class ChutesLaddersGame
   end
 
   def player_spin(player)
+    puts "Press enter to spin"
+    gets
     player.spin = spinner.spin
+    puts "You rolled a #{player.spin}"
+    puts "Press enter to advance"
+    gets
   end
 
   def winner?
     players.any? { |player| player.position == 100}
+  end
+
+  def update_player_position(player)
+    player.position = if board[player.rolled_position].jump_to
+      board[player.rolled_position].jump_to
+    else
+      player.rolled_position
+    end
   end
 
   def game_loop
@@ -150,33 +167,31 @@ class ChutesLaddersGame
       players.each do |player|
         display_line_positions
         show_next_six player
+
         player_spin(player)
 
         if player.rolled_position > 100
           board.remove_from_current_square player
-          player.position = 80
-          board.add_to_square 80, player
+          player.position = 81
+          board.add_to_square 81, player
         end
 
         board.advance(player)
-        player.position = player.rolled_position
-        #puts "#{player.name} = #{player.position}"
-        return if winner?
+        update_player_position player
+
+        if winner?
+          display_line_positions
+          return
+        end
       end
-  
-      #loop over each player
-        # player spins
-        # player moves
-        # check if won
     end
   end
 
   def play
     set_players_name
     game_loop
-    puts "you win!"
-    # display_winner
-    # play again?
+    display_line_positions
+    puts "Game Over!"
   end
 end
 
@@ -191,15 +206,54 @@ class Spinner
 end
 
 class Square
-  attr_reader :players
+  LADDERS = {4 => 14, 9 => 31, 21 => 42, 28 => 84, 36 => 44, 51 => 67, 71 => 91, 80 => 100}
+  CHUTES = {98 => 78, 95 => 75, 93 => 73, 87 => 24, 62 => 19, 64 => 60, 58 => 53, 48 => 26, 49 => 11, 16 => 6}
+
+  attr_reader :players, :number, :type, :jump_to
 
   def initialize(number, players = [])
     @number = number
     @players = players
+    @type = set_type
+    @jump_to = set_jump_to
   end
 
-  def add(player)
-    players << player
+  def top_ladder?
+    LADDERS.values.include? number
+  end
+
+  def bottom_ladder?
+    LADDERS.keys.include? number
+  end
+
+  def top_chute?
+    CHUTES.keys.include? number
+  end
+
+  def bottom_chute?
+    CHUTES.values.include? number
+  end
+
+  def set_jump_to
+    if top_chute?
+      CHUTES[number]
+    elsif bottom_ladder?
+      LADDERS[number]
+    end
+  end
+
+  def set_type
+    if top_ladder?
+      "top ladder"
+    elsif bottom_ladder?
+      "bottom ladder"
+    elsif top_chute?
+      "top chute"
+    elsif bottom_chute?
+      "bottom chute"
+    else
+      "normal"
+    end
   end
 
   def remove(player)
@@ -213,7 +267,7 @@ end
 
 class Board
     attr_reader :squares
-
+    
     def initialize(players)
       @squares = (0..100).map do |number|
         if number == 0
@@ -228,14 +282,24 @@ class Board
       self[player.position].remove player
     end
 
-    def add_to_square(square, player)
-      self[square].players << player
+    def add_to_square(square_position, player)
+      self[square_position].players << player
+    end
+
+    def add_player_to_square(player)
+      landed_on_square = self[player.rolled_position]
+      warp_position = landed_on_square.jump_to
+
+      if landed_on_square.bottom_ladder? || landed_on_square.top_chute?
+        add_to_square(warp_position, player)
+      else
+        add_to_square(player.rolled_position, player)
+      end
     end
 
     def advance(player)
       remove_from_current_square(player)
-      landed_on_square = self[player.rolled_position]
-      landed_on_square.add(player)
+      self.add_player_to_square(player)
     end
 
     def [](position)
@@ -250,3 +314,4 @@ end
 game = ChutesLaddersGame.new
 
 game.play
+

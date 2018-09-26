@@ -14,30 +14,18 @@ module Displayable
 
   def display_line_positions
     system 'clear'
-
-    players.each do |player|
-      puts position_white_spacing player
+    result_arr = players.map do |player|
+      position_white_spacing player
     end
 
-    puts ' ' + ('-' * 100).to_s
-  end
+    result_arr << (' ' + ('-' * 100).to_s)
 
-  def sprites(square_arr); end
-
-  def display_number(square)
-    case square.number.to_s.chars.count
-    when 1
-      " #{square.number}  "
-    when 2
-      " #{square.number} "
-    when 3
-      square.number
-    end
+    result_arr.each { |row| puts ((" " * (203/4)) + row)}
   end
 
   # rubocop:disable MethodLength
   def top_chute(square)
-    [' ___________________________',
+    [' ___________________________ ',
      '|                           |',
      '|                           |',
      '|                           |',
@@ -53,7 +41,7 @@ module Displayable
   end
 
   def bottom_ladder(square)
-    [' ___________________________',
+    [' ___________________________ ',
      '|     ||             ||     |',
      '|     ||=============||     |',
      '|     ||             ||     |',
@@ -69,7 +57,7 @@ module Displayable
   end
 
   def normal(square)
-    [' ___________________________',
+    [' ___________________________ ',
      '|                           |',
      '|                           |',
      '|                           |',
@@ -83,11 +71,74 @@ module Displayable
      "|            #{display_number(square)}           |",
      '|___________________________|']
   end
+
+  def current_sprite(player)
+    [' ___________________________ ',
+     '|                           |',
+     '|                           |',
+     "|          -______-         |",
+     '|            |  |           |',
+     '|            |  |           |',
+     '|          _/    \_         |',
+     '|         /        \        |',
+     '|        (__________)       |',
+     '|                           |',
+     ("|" + (" " * ((27/2) - (player.name.length / 2))) + player.name + (" " * ((27/2) - (player.name.length / 2))) + "#{player.name.size.even? ? " |" : "|"}").to_s,
+     "|                           |",
+     '|___________________________|']
+  end
   # rubocop:enable MethodLength
 
+
+  def get_sprite(square)
+    case square.type
+    when 'bottom ladder' then bottom_ladder square
+    when 'top chute' then top_chute square
+    else normal square
+    end
+  end
+
+  def sprites(square_arr)
+    sprites = square_arr.map { |square| get_sprite square}
+  end
+
+  def display_number(square)
+    case square.number.to_s.chars.count
+    when 1
+      " #{square.number}  "
+    when 2
+      " #{square.number} "
+    when 3
+      square.number
+    end
+  end
+
+  def create_display_squares(sprites_arr, player)
+    result = []
+
+    sprites_arr.unshift current_sprite(player)
+
+    sprites_arr.each do |sprite|
+      sprite.each_with_index do |line, index|
+        if result[index].nil?
+          result[index] = line
+        else
+          result[index] << line
+        end
+      end
+    end
+
+    result
+  end
+
+  def display_next_six_squares(sprites_arr, player)
+    puts create_display_squares(sprites_arr, player)
+  end
+
   def show_next_six(player)
-    # possible_landings = board.next_six player
-    # next_six_sprites = sprites possible_landings
+    possible_landings = board.next_six player
+    possible_sprites = sprites possible_landings
+    display_next_six_squares(possible_sprites, player)
   end
 end
 
@@ -107,6 +158,7 @@ end
 
 # ChutesLaddersGame class
 class ChutesLaddersGame
+  DISPLAY_WIDTH = 87
   include Displayable
   attr_reader :players, :spinner, :board
 
@@ -157,10 +209,10 @@ class ChutesLaddersGame
   end
 
   def player_spin(player)
-    puts "#{player.name}, press enter to spin"
+    print "\n#{player.name.capitalize}, press ENTER to spin"
     gets
     player.spin = spinner.spin
-    puts "#{player.name}, you rolled a #{player.spin}"
+    puts "\n#{player.name.capitalize}, you rolled a #{player.spin}"
     puts 'Press enter to advance'
     gets
   end

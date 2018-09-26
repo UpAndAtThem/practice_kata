@@ -14,30 +14,78 @@ module Displayable
       end
     end
     puts ' ' + ('-' * 100).to_s
-    gets
   end
 
-  def show_next_six(player)
-    possible_landings = board.next_six player
+  def sprites(square_arr)
+    binding.pry
+  end
+
+  def display_number(square)
+    case square.number.to_s.chars.count
+    when 1
+      " #{square.number}  "
+    when 2
+      " #{square.number} "
+    when 3
+      square.number
+    end
   end
 
   # rubocop:disable MethodLength
-  def bottom_latter(player)
+  def top_chute(square)
     [' ___________________________',
-     '| \\               \\         |',
-     '|  \\---------------\\        |',
-     '|   \\               \\       |',
-     '|    \\               \\      |',
-     '|     \\---------------\\     |',
-     '|      \\               \\    |',
-     '|       \\               \\   |',
-     '|        \\---------------\\  |',
-     '|         \\               \\ |',
-     '|          \\               \\|',
-     "|            #{player.position}              |",
-     '|___________________________']
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|      ______________       |',
+     '|     |    tunnel    |      |',
+     "|     |______________|      |",
+     '|       |          |        |',
+     '|       |          |        |',
+     '|       |          |        |',
+     '|       |          |        |',
+     "|       |    #{display_number(square)}  |        |",
+     '|_______|__________|________|']
+  end
+
+  def bottom_ladder(square)
+    [' ___________________________',
+     '|     ||             ||     |',
+     '|     ||=============||     |',
+     '|     ||             ||     |',
+     '|     ||             ||     |',
+     '|     ||=============||     |',
+     '|     ||             ||     |',
+     '|     ||             ||     |',
+     '|     ||=============||     |',
+     '|     ||             ||     |',
+     '|     ||             ||     |',
+     "|           #{display_number(square)}            |",
+     '|___________________________|']
+  end
+
+  def normal(square)
+    [' ___________________________',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     '|                           |',
+     "|            #{display_number(square)}           |",
+     '|___________________________|']
   end
   # rubocop:enable MethodLength
+
+  def show_next_six(player)
+    possible_landings = board.next_six player
+    next_six_sprites = sprites possible_landings
+    binding.pry
+  end
 end
 
 # Player class
@@ -279,7 +327,7 @@ class Board
   end
 
   def next_six(player)
-    squares.slice(player.position, (player.position + 6))
+    squares.slice(player.position + 1, 6)
   end
 end
 

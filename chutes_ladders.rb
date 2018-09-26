@@ -3,22 +3,26 @@ require 'yaml'
 
 # Displayable Module
 module Displayable
+  def position_white_spacing(player)
+    if player.position.zero?
+      player.name[0]
+    else
+      "#{' ' * player.position}" \
+      "#{player.name[0]}"
+    end
+  end
+
   def display_line_positions
     system 'clear'
-    players.count.times do |player_index|
-      if players[player_index].position.zero?
-        puts players[player_index].name[0]
-      else
-        puts "#{' ' * players[player_index].position}" \
-               "#{players[player_index].name[0]}"
-      end
+
+    players.each do |player|
+      puts position_white_spacing player
     end
+
     puts ' ' + ('-' * 100).to_s
   end
 
-  def sprites(square_arr)
-    binding.pry
-  end
+  def sprites(square_arr); end
 
   def display_number(square)
     case square.number.to_s.chars.count
@@ -39,7 +43,7 @@ module Displayable
      '|                           |',
      '|      ______________       |',
      '|     |    tunnel    |      |',
-     "|     |______________|      |",
+     '|     |______________|      |',
      '|       |          |        |',
      '|       |          |        |',
      '|       |          |        |',
@@ -82,9 +86,8 @@ module Displayable
   # rubocop:enable MethodLength
 
   def show_next_six(player)
-    possible_landings = board.next_six player
-    next_six_sprites = sprites possible_landings
-    binding.pry
+    # possible_landings = board.next_six player
+    # next_six_sprites = sprites possible_landings
   end
 end
 
@@ -174,22 +177,28 @@ class ChutesLaddersGame
                       end
   end
 
+  def rolled_over_limit(player)
+    board.remove_from_current_square player
+    player.position = 81
+    board.add_to_square 81, player
+  end
+
+  def current_player_turn(player)
+    display_line_positions
+    show_next_six player
+
+    player_spin(player)
+
+    rolled_over_limit(player) if player.rolled_position > 100
+
+    board.advance(player)
+    update_player_position player
+  end
+
   def game_loop
     loop do
       players.each do |player|
-        display_line_positions
-        show_next_six player
-
-        player_spin(player)
-
-        if player.rolled_position > 100
-          board.remove_from_current_square player
-          player.position = 81
-          board.add_to_square 81, player
-        end
-
-        board.advance(player)
-        update_player_position player
+        current_player_turn(player)
 
         if winner?
           display_line_positions

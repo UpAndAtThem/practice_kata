@@ -1,5 +1,4 @@
 # Build a deck of cards where each card resembles "ace of hearts"
-require 'pry'
 
 class Cards
   SUITS = %w(clubs diamonds hearts spades)
@@ -8,7 +7,7 @@ class Cards
   attr_accessor :cards
   
   def initialize
-    @cards = SUITS.product VALUE
+    @cards = SUITS.product(VALUE).flat_map{ |arr| "#{arr[1]} of #{arr[0]}"}
   end
   
   def shuffle

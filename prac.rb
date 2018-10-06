@@ -1,4 +1,11 @@
+# Object Oriented programming is useful because it creates an encapsulated object that has its own scope where its code runs uninpeded 
+# from the outside world.  It creates a polymorphic interface which helps when you want the same interface with a different outcome.  
+# Its easier to scale because instead of one big piece of code running, you have standalone objects that can be expanded and refactored 
+# without causing a huge butterfly effect in the codebase. Plus object orient programming allows programmers to think about
+# code in an abstract ways with nouns acting as classes and verbs class behavior.
+
 # ---------------------------------------------------
+
 # ENCAPSULATION
 
 # hiding functionality and state away from outside objects and code from having access to the encapsulated code. Effectively keeping the code safe 
@@ -34,14 +41,13 @@ rick.greeting # can access name and age i-methods because it's being invoked wit
 # rick.age cannot access instance getter method age and name because it is private NoMethodError.
 # The class person is an example of encapsulation.  The state and behavior is wrapped up in the class definition and the only things that have access to that code are instantiated objects of the same class or from within other methods of the same class.
 
-
 # ----------------------------------------------------------
 
 # INHERITANCE
 
 # Allows behaviors to be passed down from a superclass to all of its subclasses.  A way to achieve polymorphism 
 # as well as resusing code that shares common behavior among the inheritance structure without the need for repetion of code.  Behavior from superclasses 
-# are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. The symbol < is used after the class name in the definition followed 
+# are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed 
 # by the superclass that particular class is subclassing.
 
 module Swimmable
@@ -75,11 +81,18 @@ Dog.new.swim
 Fish.new.swim
 Cat.new.swim 
 
+# ----------------------------------------------------
+
 # INHERITANCE VS MODULES
 
 # use inheritance if its an "is a" relationship. Use modules if its a "has an ability" relationship.  For instance choose 
 # inheritance for hierachical relationships. ex: Beagle inherits from Mammal which inherits from Animal.
 # use modules for behaviors or abilities. ex: the ability to fly would use the flyable module.
+# modules are a collection of behaviors that can be mixed into multiple classes, unlike inheritance class can mixin as many modules they need, 
+# where as a class can only subclass from one class.  modules acts similarly to inheritance, but modules cannot be instantiated like a class can.
+
+# The classes Fish and Mammal both subclass from Animal because it has an "is a" relationship, where the module Swimmable is mixed in to the Dog and Fish classes,
+# because this is a "has an ability" relationship.  
 
 # METHOD LOOKUP PATH
 
@@ -93,8 +106,43 @@ Cat.new.swim
 
 # CLASS
 
-# Classes act as a blueprint for objects.  A class encapsulates an objects state and behavior.  State is available and created at the object level
-# whereas behavior is shared by objects at the class level.  instantiated objects of a class all share the behaviors defined by the class.  
+# Classes act as a blueprint or a basic outline for objects.  A class defines, and encapsulates an objects state and behavior. State tracks attributes, and is created at the object level
+# whereas behavior is what an object is capable of, and is shared at the class level.  instantiated objects of a class all share the behaviors defined by the class.  
 # Instance variables a.k.a. 'an objects state' are not shared, it's only available to the specific instantiated object.
 # Which is how different objects of the same class can hold different states from one another.
+
+# -------------------------------------------------------------
+
+# INSTANCE METHODS
+
+# instance methods are methods that are called on an instance of a class.  Its the public interface an object uses to expose its state, or invoke its defined behaviors.    
+
+class Dog
+  def speak
+    puts 'Woof Woof'
+  end
+end
+
+doggie = Dog.new
+doggie.speak # speak is an instance method that the instantiated Dog object, held by the variable doggie, is invoking.
+
+# -----------------------------------------------------------
+
+# ATTR_METHODS
+
+# attr_reader, attr_writer, and attr_accessor are methods used to create getter and setter methods.
+
+# 'attr_accessor :name' is essentially the same as defining both of the following instance methods.
+
+def name=(name) # setter method
+  @name = name
+end
+
+def name # getter method
+  @name
+end
+
+# if you only want to define the getter method use 'attr_reader'
+# if you only want to define the setter method use 'attr_writer'
+# if you want to define both the getter and setter method use 'attr_accessor'
 

@@ -12,7 +12,7 @@
 
 # objects are instantiations of a class.  A class is what defines an object.  Objects have state and behavior. 
 # State, or an objects attributes are created at the object level and are unique to each individual instance. 
-# Behaviors are shared at the class level, by all instances of the same class.
+# Behaviors are shared at the class level, by all instances of the class.
 
 # ------------------------------------------------------------
 
@@ -55,7 +55,7 @@ rick.greeting # can access name and age i-methods because it's being invoked wit
 # INHERITANCE
 
 # is behaviors inherited from a superclass to all of its subclasses.  A way to achieve polymorphism as well as resusing code that shares common behavior among the inheritance structure.  
-# Extract shared behavior from multiple classes into a superclass, which in turn you forego the need for repetion of code.  Behavior from superclasses 
+# Through inheritance, you can extract shared behavior of multiple classes into a superclass, and have those classes inherit from the new class containing the shared behaviors. This in turn allows you forego the need for repetion of code.  Behavior from superclasses 
 # are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed 
 # by the superclass that particular class is subclassing.
 
@@ -188,3 +188,28 @@ end
 # if you want to define both the getter and setter method use 'attr_accessor'
 
 # -----------------------------------------------------------
+
+# SELF
+
+# self can mean a couple things in Ruby.  If the keyword self is used within the definition of an instance method, 
+# self refers to the calling object of the method.  
+
+# When self is used to define a class method (like in line 195), self refers to the class itself.
+
+  class Person
+    def self.greeting
+      puts "This 'self' is the #{self} class"
+    end
+
+    def greeting
+      puts "This 'self' is #{self} a Person instance"
+    end
+  end
+
+  cindy = Person.new
+
+  Person.greeting
+  cindy.greeting
+
+
+

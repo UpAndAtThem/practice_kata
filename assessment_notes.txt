@@ -56,8 +56,7 @@ The Person class is an example of encapsulation.  The state and behavior is wrap
 
 # INHERITANCE
 
-Inheritance is behaviors inherited from a superclass to all of its subclasses.  A way to achieve polymorphism as well as resusing code that shares common behavior among the inheritance structure. Through inheritance, you can extract shared behavior of multiple classes into a superclass, and have those classes inherit from the superclass containing the shared behaviors. This in turn allows you forego the need for repetion of code.  Behavior from superclasses are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed 
-by the superclass that particular class is subclassing.
+Inheritance is behaviors inherited from a superclass to all of its subclasses.  A way to achieve polymorphism as well as resusing code that shares common behavior among the inheritance structure. Through inheritance, you can extract shared behavior of multiple classes into a superclass, and have those classes inherit from the superclass containing the shared behaviors. This in turn allows you forego the need for repetion of code.  Behavior from superclasses are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed by the superclass that particular class is subclassing.
 
 module Swimmable
   def swim
@@ -94,7 +93,7 @@ Cat.new.swim
 
 # MODULES
 
-A module allows us to group reusable code into one place. We can use modules in our classes by using the include keyword, followed by the module name. Modules are also used as a namespace to group objects together. The Math module is a good example of modules used as a namespace.
+A module allows us to group reusable code into one place. We can use modules in our classes by using the include keyword, followed by the module name. This will extend the modules behaviors to the class that included it. Modules are also used as a namespace to group objects together. The Math module is a good example of modules used as a namespace.
 
 module Swimmable
   def swim
@@ -118,8 +117,7 @@ Person.new.dive
 
 use inheritance if its an "is a" relationship. Use modules if its a "has an ability" relationship.  For instance choose inheritance for hierachical relationships. ex: Beagle inherits from Mammal which inherits from Animal.
 
-use modules for behaviors or abilities. ex: the ability to fly would use the flyable module.
-modules are a collection of behaviors that can be mixed into multiple classes, unlike inheritance, classes can mixin as many modules they need, where as a class can only subclass from one class.  modules acts similarly to inheritance, but modules cannot be instantiated like a class can.
+use modules for behaviors or abilities. ex: the ability to fly would use the flyable module. modules are a collection of behaviors that can be mixed into multiple classes, unlike inheritance, classes can mixin as many modules they need, where as a class can only subclass from one class.  modules acts similarly to inheritance, but modules cannot be instantiated like a class can.
 
 In the above code, the classes Fish and Mammal both subclass from Animal, again, because it has an "is a" relationship (A fish and a mammal are animals). We also want to reuse the swim functionality without having to put the same code into 2, 3, 4 or however many classes we need to grant the ability to swim. swim wont fit into Mammal or Animal classes because not all of their subclasses share that behavior. In order to solve this we need to use a module. The module Swimmable is created, and mixed in to the Dog and Fish classes with the keyword include followed by the module name, this will now give those classes that shared behavior.
 

@@ -92,6 +92,28 @@ Cat.new.swim
 
 ----------------------------------------------------
 
+# MODULES
+
+A module allows us to group reusable code into one place. We can use modules in our classes by using the include keyword, followed by the module name. Modules are also used as a namespace to group objects together. The Math module is a good example of modules used as a namespace.
+
+module Swimmable
+  def swim
+    puts "I'm swimming"
+  end
+
+  def dive
+    puts "I'm diving"
+  end
+end
+
+class Person
+  include Swimmable
+end
+
+Person.new.dive
+
+-----------------------------------------------------
+
 # INHERITANCE VS MODULES
 
 use inheritance if its an "is a" relationship. Use modules if its a "has an ability" relationship.  For instance choose inheritance for hierachical relationships. ex: Beagle inherits from Mammal which inherits from Animal.

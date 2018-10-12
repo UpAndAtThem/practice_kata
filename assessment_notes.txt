@@ -213,6 +213,7 @@ speak is an instance method that an instantiated Dog object, being pointed at by
 # ATTR_METHODS
 
 attr_reader, attr_writer, and attr_accessor are methods used to create getter and setter methods.
+They take as arguments 1 or more symbols of the instance variable name you want to create getter and or setter methods.
 
 the line of code below is the same as defining both of the following instance methods.
 

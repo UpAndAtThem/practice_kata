@@ -283,4 +283,4 @@ in Dog#initialize super is invoked with no argument.  Looks and finds initialize
 
 # EQUALITY
 
-by default equality methods returns true only if the calling object and the argument are the same object (have the same object id).  These methods (Object#eql, Object#==, and)
+By default equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test.  The <=> method is used in conjunction returning 1, 0, -1.  0 meaning equal, 1 meaning calling object greater than argument, and -1 the opposite of 1 meaning.

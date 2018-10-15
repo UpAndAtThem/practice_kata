@@ -284,6 +284,9 @@ in Dog#initialize super is invoked with no argument.  Looks and finds initialize
 
 By default equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test. Most of the time == instance methods are used to test if values are the same, rather than being the same object. The <=> method is often overridden and is invoked within the classes instance method == returning 1, 0, or -1.  0 meaning equal, 1 meaning calling object greater than argument, and -1 meaning argument is greater than the calling object.  If you're looking for object equality use Object#equal?
 
+== instance method typically checks for equality of a value between calling object and argument
+equal? instance method typically checks for equality of object (meaning they are the same object_id) and value, between calling object and argument.
+
 ----------------------------------------------------------
 
 # ===

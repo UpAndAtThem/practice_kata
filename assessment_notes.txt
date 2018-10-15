@@ -14,7 +14,7 @@ Classes act as a blueprint or a basic outline for objects. Classes are encapsula
 
 # OBJECTS
 
-objects are instantiations of a class.  A class is what defines an object.  Objects have state and behavior.State, or an objects attributes are created at the object level and are unique to each individual instance. Behaviors are shared at the class level, by all instances of the class.
+objects are instantiations of a class.  A class is what defines an object.  Objects have state and behavior. State, or an objects attributes are created at the object level and are unique to each individual instance. Behaviors are shared at the class level, by all instances of the class.
 
 ------------------------------------------------------------
 
@@ -183,8 +183,7 @@ Person and Dog both subclass from Mammal.  Mammal inherits to both classes the b
 
 # METHOD LOOKUP PATH
 
-method look up path is the path ruby takes when trying to do method resolution.  Ruby first looks within the class that the calling object belongs to. Ruby will then look through all of the mixed in modules in reverse order from which they were included. Ruby will then use inheritance, checking 
-the superclass of the calling object, followed by the superclasses modules, again in reverse order of inclusion. Ruby will Check The superclasses superclass, then the modules, until it reaches the BasicObject class. It then looks through BasicObject's methods and modules. If at this point there is no resolution, ruby was unable to find the method it was searching for, and will throw a NoMethodError exception and crash the program.
+method look up path is the path ruby takes when trying to do method resolution.  Ruby first looks within the class that the calling object belongs to. Ruby will then look through all of the mixed in modules in reverse order from which they were included. Ruby will then use inheritance, checking the superclass of the calling object, followed by the superclasses modules, again in reverse order of inclusion. Ruby will then Check The superclasses superclass, then the modules, until it reaches the BasicObject class. It looks through BasicObject's methods then modules. If at this point there is no resolution, ruby was unable to find the method it was searching for, and will throw a NoMethodError exception and crash the program.
 
 To check for the method lookup path of a class you can use the class method 'ancestors'
 
@@ -277,10 +276,18 @@ end
 
 sparky = Dog.new('Sparky')
 
-in Dog#initialize super is invoked with no argument.  Looks and finds initialize in the Animal class. Runs the code and creates the instance variable type containing the string Animal.  Implicitly returning the string 'Animal' as supers return back in the Dog#initialize method (which the program does nothing with).  After which the rest of the code in run, setting the instance variable @name to the value of the provided name argument.
+in Dog#initialize super is invoked with no argument.  Looks and finds initialize in its superclass, the Animal class. Runs the code and creates the instance variable @type containing the string Animal.  Implicitly returning the string 'Animal' as super's return back to the Dog#initialize method (which the program does nothing with).  After which the rest of the code is run, setting the instance variable @name to the value of the provided name argument.
 
 ---------------------------------------------------------
 
 # EQUALITY
 
-By default equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test.  The <=> method is used in conjunction returning 1, 0, -1.  0 meaning equal, 1 meaning calling object greater than argument, and -1 the opposite of 1 meaning.
+By default equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test. Most of the time == instance methods are used to test if values are the same, rather than being the same object. The <=> method is often overridden and is invoked within the classes instance method == returning 1, 0, or -1.  0 meaning equal, 1 meaning calling object greater than argument, and -1 meaning argument is greater than the calling object.  If you're looking for object equality use Object#equal?
+
+----------------------------------------------------------
+
+# ===
+
+The triple equals operator (which is really a method) is used for comparison in case statement, and have different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
+
+-----------------------------------------------------------

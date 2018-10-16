@@ -1,6 +1,6 @@
 # OOP BENEFITS
 
-Object Oriented programming is useful because it creates encapsulated objects that have their own scope where the code runs uninpeded from the rest of the program. It creates a polymorphic interface which helps when you want the same interface for differing objects producing a different outcome.  
+Object Oriented programming is useful because it creates encapsulated objects that have their own scope where the code runs uninpeded from the rest of the program. It allows for a polymorphic interface which helps when you want the same interface for differing objects producing a different outcome.  
 
 Its easier to scale because instead of one big piece of code running, you have standalone objects that can be expanded and refactored without causing a huge butterfly effect in the codebase. Plus object orient programming allows programmers to think about code in an abstract way, with nouns acting as classes, and verbs being the classes behavior.
 
@@ -20,13 +20,13 @@ objects are instantiations of a class.  A class is what defines an object.  Obje
 
 # ENCAPSULATION
 
-Hiding functionality and state from outside code. Effectively keeping the code safe from outside interference, by controling the access to the encapsulated code, only exposing publically the interfaces that which are needed to properly interact with the object itself. You can set public, private, and protected methods for a class, It will help you control access levels, which will affect the interface of how instantiated objects can interact with its internals.
+Hiding functionality and state from outside code. Effectively keeping the code safe from outside interference, by controling the access to the encapsulated code, only exposing publically the interfaces, which are needed to properly interact with the object itself. You can set public, private, and protected methods for a class, It will help you control access levels, which will affect the interface of how instantiated objects can interact with its internals.
 
 instantiated objects do not have access to protected methods outside the class definition, but is treated like a public method from within the class definition. 
 
-instantiated objects never have access to private methods outside or inside the class. private methods are only accessible from other methods in the class. private methods cannot be invoked with an explicit calling object (EX self.private_method or mcgruff.private_method) 
+instantiated objects never have access to private methods outside or inside the class. private methods are only accessible from other methods in the class. private methods cannot be invoked with an explicit calling object (EX self.private_method or calling_object.private_method) 
 
-public methods are available anywhere, no access control is enforced. Public methods are the interfaces objects use externally, all methods are public by default unless it follows the keyword private or protected.
+public methods are available anywhere, no access control is enforced. Public methods are the interfaces objects use externally, all methods are public by default unless its definition follows the keyword private or protected.
 
 class Person
   def initialize(name, age)
@@ -59,7 +59,7 @@ The Person class is an example of encapsulation.  The state and behavior is wrap
 
 # INHERITANCE
 
-Inheritance is behaviors inherited from a superclass to all of its subclasses.  A way to achieve polymorphism as well as resusing code that shares common behavior among the inheritance structure. Through inheritance, you can extract shared behavior of multiple classes into a superclass, and have those classes inherit from the superclass containing the shared behaviors. This in turn allows you forego the need for repetion of code.  Behavior from superclasses are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed by the superclass that particular class is subclassing.
+Inheritance is a relationship between classes, where behaviors are given from a superclass to all of its subclasses.  It's a way to achieve polymorphism as well as resusing code. Through inheritance, you can extract shared behavior of multiple classes into a superclass, and have those classes inherit from the superclass containing the shared behaviors. This in turn allows you forego the need for repetion of code.  Behavior from superclasses are inherited by all subclasses, but not the other way around. Superclasses inherit nothing from its subclasses. In order to subclass the symbol < is used after the class name in the definition followed by the superclass that particular class is subclassing.  Ruby only allows single inheritance, so modules are used to create multiple inheritances by mixing in behavior.
 
 module Swimmable
   def swim
@@ -236,9 +236,9 @@ if you want to define both the getter and setter method use 'attr_accessor'
 
 # SELF
 
-self can mean a couple things in Ruby.  If the keyword self is used within the definition of an instance method, self refers to the calling object of the method.  
+self can mean a couple things in Ruby.  If the keyword self is used within the definition of an instance method, self refers to the calling object of the method, which is an instance of the class containing it.  
 
-When self is used to define a class method, or used within a class method, self is still referring to the calling object, which in this case is the class itself.
+When self is used to define a class method, or used within a class method, self is still referring to the calling object, which now in this case is the class itself.
 
 class Person
   def self.greeting
@@ -259,7 +259,7 @@ cindy.greeting
 
 # SUPER
 
-The keyword super invoked from within a method allows us to look up the hierarchical structure for another instance of the method currently being executed. When it finds the method, it executes it and returns the return value back to super.  If you invoke super with no arguments it will automatically pass all of the arguments that were supplied to the current method being executed.  If you invoke super as super() it is passed no arguments.  You can pass as many or as few as needed to avoid an ArgumentError exception.
+The keyword super invoked from within a method allows us to look up the hierarchical structure for another instance of the method currently being executed. When it finds the method, it executes it and returns the return value back to super.  If you invoke super with no arguments and no parenthesis, it will automatically pass all of the arguments that were supplied to the current method being executed.  If you invoke super as super() it is passed no arguments.  You can pass as many or as few as needed to avoid an ArgumentError exception.
 
 class Animal
   def initialize
@@ -280,17 +280,23 @@ in Dog#initialize super is invoked with no argument.  Looks and finds initialize
 
 ---------------------------------------------------------
 
-# EQUALITY
+# EQUALITY/ EQUIVALENCE
 
-By default equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test. Most of the time == instance methods are used to test if values are the same, rather than being the same object. The <=> method is often overridden and is invoked within the classes instance method == returning 1, 0, or -1.  0 meaning equal, 1 meaning calling object greater than argument, and -1 meaning argument is greater than the calling object.  If you're looking for object equality use Object#equal?
+Equality / Equvalence is the condition of being equal, by value or otherwise. By default the equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test. Most of the time == instance methods are used to test if values are the same, rather than being the same object. If you're looking for object equality use Object#equal?
 
-== instance method typically checks for equality of a value between calling object and argument
-equal? instance method typically checks for equality of object (meaning they are the same object_id) and value, between calling object and argument.
+== instance method typically checks for 'equality of value' between calling object and argument.
+equal? instance method checks for equality of object (meaning they are the same object_id) and value, between calling object and argument. This should not be overridden, because other methods rely on its current implementation.
 
 ----------------------------------------------------------
 
 # ===
 
-The triple equals operator (which is really a method) is used for comparison in case statements, and have different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
+The triple equals operator (which is really a method) is used for comparison in case statements, and has different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
+
+-----------------------------------------------------------
+
+# INSTANCE VARIABLES
+
+instance variables begin with an @ character and are variables that are created by an instance of a class. It's state tracked at the object level.  Each instantiated class have their own instance variables. They are not shared between other objects of that class.  They are available within methods public, private and protected of the same class.  Instance variables, once created remain defined for as long as the object exisits.  Unlike local variables, uninitialized instance variables don't throw a NameError if referenced, instead it returns nil.
 
 -----------------------------------------------------------

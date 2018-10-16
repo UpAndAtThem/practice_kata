@@ -119,7 +119,7 @@ Person.new.dive
 
 # NAMESPACING MODULE
 
-Modules can also be used as a namespace to group classes together. This safegaurds the code against class collision with the codebase, because for instantiation it requires accessing the class through the module with double colons :: (EX. ModuleName::ClassName), making the instantiation call more explicit and clear. 
+Modules can also be used as a namespace to group classes together. This safegaurds the code against class collision with the codebase, because for instantiation it requires accessing the class through the module with namespace resolution operator :: (EX. ModuleName::ClassName), making the instantiation call more explicit and clear. 
 Below is an example on how to use modules for namespacing
 
 module Dogs
@@ -211,8 +211,7 @@ speak is an instance method that an instantiated Dog object, being pointed at by
 
 # ATTR_METHODS
 
-attr_reader, attr_writer, and attr_accessor are methods used to create getter and setter methods.
-They take as arguments 1 or more symbols of the instance variable name you want to create getter and or setter methods. It's better to use attr_methods vs using instance vars directly, because if you're referencing an instance variable directly and mispell it you are referencing an uninitialized instance variable, which returns nil instead of throwing a NameError.  This will most likely create a bug in your code, and possibly give no error messages.
+attr_reader, attr_writer, and attr_accessor are methods used to create getter and setter methods. As arguments they take 1 or more symbols of the instance variable name for which you want to create a getter and or setter method. It's better to use attr_methods vs using instance vars directly, because if you're referencing an instance variable directly and mispell it you are referencing an uninitialized instance variable, which returns nil instead of throwing a NameError. This will most likely create a bug in your code, and possibly give no error messages.
 
 the line of code below is the same as defining both of the following instance methods.
 
@@ -285,6 +284,7 @@ in Dog#initialize super is invoked with no argument.  Looks and finds initialize
 Equality / Equvalence is the condition of being equal, by value or otherwise. By default the equality method BasicObject#== returns true only if the calling object and the argument are the same object (have the same object id).  This method is typically overriden within classes to fit their class specfic equality test. Most of the time == instance methods are used to test if values are the same, rather than being the same object. If you're looking for object equality use Object#equal?
 
 == instance method typically checks for 'equality of value' between calling object and argument.
+
 equal? instance method checks for equality of object (meaning they are the same object_id) and value, between calling object and argument. This should not be overridden, because other methods rely on its current implementation.
 
 ----------------------------------------------------------
@@ -293,10 +293,71 @@ equal? instance method checks for equality of object (meaning they are the same 
 
 The triple equals operator (which is really a method) is used for comparison in case statements, and has different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
 
+case 8
+when String
+  puts "I'm a string"
+when (0..9)
+  puts "I'm home on the range"
+end
+
+The code above is the same as the code below
+
+test = 8
+
+if String === test
+  puts "I'm a string"
+elsif (0..9) === test
+  puts "I'm home on the range"
+end
+
 -----------------------------------------------------------
 
 # INSTANCE VARIABLES
 
-instance variables begin with an @ character and are variables that are created by an instance of a class. It's state tracked at the object level.  Each instantiated class have their own instance variables. They are not shared between other objects of that class.  They are available within methods public, private and protected of the same class.  Instance variables, once created remain defined for as long as the object exisits.  Unlike local variables, uninitialized instance variables don't throw a NameError if referenced, instead it returns nil.
+instance variables begin with an @ character and are variables that are created by an instance of a class. It's state tracked at the object level.  Each instantiated class have their own instance variables. They are not shared between other objects of that class.  They are available and mutable within methods public, private and protected of the same class.  Instance variables, once created remain defined for as long as the object exisits.  Unlike local variables, uninitialized instance variables don't throw a NameError if referenced, instead it returns nil.
 
 -----------------------------------------------------------
+
+# CLASS VARIABLES
+
+class variables begin with two @ characters and are similar to instance variables, in the respect that they both can be accessed from instance and class methods. However class variables are tracked at the class level, and that 1 object the variable is pointing to is shared by all objects of that class, and subclasses. If an object from its subclass mutates that class variable, that variable is changed everywhere in that hierarchy that has access to it, because its 1 copy shared by all, which is why a lot of developers shy away from class variables.
+
+class Auto
+  @@wheels = 4
+
+  def wheels
+    puts @@wheels
+  end
+end
+
+class ThreeWheeler < Auto
+  @@wheels = 3
+
+  def wheels
+    puts @@wheels
+  end
+end
+
+Auto.new.wheels
+ThreeWheeler.new.wheels
+
+The subclass ThreeWheeler reassigned the class variable @@wheels which affects The class variable @@wheels in Auto (its the same shared class variable) it is no longer 4 but 3.
+
+--------------------------------------------------------------
+
+# CONSTANTS
+
+Constants are any variable that begins with a capital letter. For constants though most rubyists capitalize every letter instead of just one.  Constants are not meant to be changed once set, and will give warning (not an error) if you do reassign.  Constants are lexically scoped, and are defined in the class body, not dynamically in class or instance methods. Constants can be accessed even if the constant isn't within its lexical scope or even the same object (class and instance variables cannot be accessed by outside objects).  To access the constant, let ruby know where it is located, by using the namespace resolution operator ::.
+
+module Walkable
+  def walk
+    puts "Just put my #{self.class::FEET} feet to the ground"
+  end
+end
+
+class Person
+  FEET = 2
+  include Walkable
+end
+
+Person.new.walk

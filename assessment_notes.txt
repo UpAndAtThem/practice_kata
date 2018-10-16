@@ -212,7 +212,7 @@ speak is an instance method that an instantiated Dog object, being pointed at by
 # ATTR_METHODS
 
 attr_reader, attr_writer, and attr_accessor are methods used to create getter and setter methods.
-They take as arguments 1 or more symbols of the instance variable name you want to create getter and or setter methods.
+They take as arguments 1 or more symbols of the instance variable name you want to create getter and or setter methods. It's better to use attr_methods vs using instance vars directly, because if you're referencing an instance variable directly and mispell it you are referencing an uninitialized instance variable, which returns nil instead of throwing a NameError.  This will most likely create a bug in your code, and possibly give no error messages.
 
 the line of code below is the same as defining both of the following instance methods.
 
@@ -291,6 +291,6 @@ equal? instance method typically checks for equality of object (meaning they are
 
 # ===
 
-The triple equals operator (which is really a method) is used for comparison in case statement, and have different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
+The triple equals operator (which is really a method) is used for comparison in case statements, and have different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
 
 -----------------------------------------------------------

@@ -1,6 +1,6 @@
 # OOP BENEFITS
 
-Object Oriented programming is useful because it creates encapsulated objects that have their own scope where the code runs uninpeded from the rest of the program. It allows for a polymorphic interface which helps when you want the same interface for differing objects producing a different outcome.  
+Object Oriented programming is useful because it creates encapsulated objects that have their own scope, which helps avoid namespace issues, and allows the code runs uninpeded from the rest of the program outside the class. OOP allows authors to hide code from the outside and only expose interfaces needed to interact with the object. It allows for a polymorphic interface which helps when you want the same interface for differing objects producing a different outcome.  
 
 Its easier to scale because instead of one big piece of code running, you have standalone objects that can be expanded and refactored without causing a huge butterfly effect in the codebase. Plus object orient programming allows programmers to think about code in an abstract way, with nouns acting as classes, and verbs being the classes behavior.
 
@@ -47,7 +47,7 @@ end
 
 rick = Person.new("Rick", 33)
 
-because of the private keyword, the getter methods name and age are only accessable within methods that are a part of the same class, and cannot be invoked by an explict calling object.
+because of the private keyword, the getter methods name and age are only accessible within methods that are a part of the same class, and cannot be invoked by an explict calling object.
 
 rick.greeting can access the name and age private instance methods because it's being invoked within the method definition without being invoked by the instantiated Person (self keyword) calling object.
 
@@ -293,14 +293,16 @@ equal? instance method checks for equality of object (meaning they are the same 
 
 The triple equals operator (which is really a method) is used for comparison in case statements, and has different implementation depending on what data type is invoking it. Range#=== implementation essentailly asks 'does the argument fall within the calling range?', where as if String::=== check to see if the argument is a object of the calling objects class.
 
-case 8
+test = 8
+
+case test
 when String
   puts "I'm a string"
 when (0..9)
   puts "I'm home on the range"
 end
 
-The code above is the same as the code below
+The code above is effectively the same as the code below
 
 test = 8
 
@@ -347,7 +349,9 @@ The subclass ThreeWheeler reassigned the class variable @@wheels which affects T
 
 # CONSTANTS
 
-Constants are any variable that begins with a capital letter. For constants though most rubyists capitalize every letter instead of just one.  Constants are not meant to be changed once set, and will give warning (not an error) if you do reassign.  Constants are lexically scoped, and are defined in the class body, not dynamically in class or instance methods. Constants can be accessed even if the constant isn't within its lexical scope or even the same object (class and instance variables cannot be accessed by outside objects).  To access the constant, let ruby know where it is located, by using the namespace resolution operator ::.
+Constants are any variable that begins with a capital letter. For constants though most rubyists capitalize every letter instead of just one.  Constants are not meant to be changed once set, and will give warning (not an error) if you do reassign.  Constants are lexically scoped, and are defined in the class body, not dynamically in class or instance methods. Constants are inherited by subclasses and are accessible from the subclasses class and instance methods.
+
+Constants can be accessed even if the constant isn't within its lexical scope or even the same object (class and instance variables cannot be accessed by outside objects). To access the constant, let ruby know where its scoped, by using the namespace resolution operator ::.
 
 module Walkable
   def walk
@@ -361,3 +365,23 @@ class Person
 end
 
 Person.new.walk
+
+-------------------------------------------------------------
+
+# EXCEPTIONS
+
+exceptions are exceptional state in your code.  This is due to your code behaving unexpectedly.  If nothing is done about the exception, the program will crash.  You can handle the exceptions with elegance, and have your program deal with the issue, and continue moving forward with its processes.
+
+to handle exceptions wrap the code that may experience unexpected outcomes in a begin/rescue structure.
+
+begin
+  # code that might fail in begin block
+rescue TypeError => e # passes exception object to resuce block
+  # code to handle exception in rescue block
+  # has access to e object that was passed to this block
+end
+
+# you can handle different exception types differently by adding 1 or more comma seperated names of the exception classes after the rescue keyword. This will execute the rescue block if any of the explicitly named exceptions are raised.
+
+---------------------------------------------------------------
+

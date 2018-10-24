@@ -8,10 +8,18 @@ class Array # Don't do what this is doing, just for practice writing methods tha
     end
     self
   end
-end
 
-arr = ["one", "two", "three"]
+  def my_select(&proc)
+    result = []
+    count = 0
 
-arr.my_each do |elem|
-  puts(elem + "!")
+    loop do
+      break if count == self.count
+      current_num = self[count]
+      result << current_num if yield(current_num)
+      count += 1
+    end
+
+    result
+  end
 end

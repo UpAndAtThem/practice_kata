@@ -14,8 +14,6 @@ class YahtzeeGame
     @card = YahtzeeCard.new
     @cup = YahtzeeCup.new
     @players = []
-    require 'pry'
-    binding.pry
   end
 end
 

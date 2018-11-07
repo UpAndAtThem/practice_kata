@@ -30,6 +30,14 @@ class Player
       puts "You need to enter at least one character."
     end
   end
+
+  def start_turn(cup)
+
+  end
+
+  def spaces_empty?
+    true
+  end
 end
 
 class YahtzeeGame
@@ -74,7 +82,13 @@ class YahtzeeGame
   end
 
   def players_take_turns
+    loop do
+      players.each do |player|
+        player.start_turn(cup)
 
+        break unless player.spaces_empty?
+      end
+    end
   end
 
   def play

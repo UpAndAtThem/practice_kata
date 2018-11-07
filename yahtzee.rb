@@ -9,7 +9,32 @@
 # Winner announced.
 # Play again?
 
+require 'pry'
+
+class Player
+  attr_accessor :name
+
+  def initialize(player_number)
+    @name = "Player #{player_number}"
+  end
+
+  def get_name
+    loop do
+      puts "What is your name?"
+      name = gets.chomp
+
+      unless name.empty?
+        return name
+      end
+
+      puts "You need to enter at least one character."
+    end
+  end
+end
+
 class YahtzeeGame
+  attr_accessor :card, :cup, :players
+
   def initialize
     @card = YahtzeeCard.new
     @cup = YahtzeeCup.new
@@ -26,12 +51,43 @@ class YahtzeeGame
     end
   end
 
+  def create_players
+    1.upto(@num_players) do |player_number|
+      @players << Player.new(player_number)
+    end
+  end
+
+  def set_names
+    players.each do |player|
+      loop do
+        puts "#{player.name}, what is your name?"
+        name = gets.chomp
+
+        unless name.empty?
+          player.name = name
+          break
+        end
+
+        puts "Your name must be at least 1 character."
+      end
+    end
+  end
+
+  def players_take_turns
+
+  end
+
   def play
     prompt_num_players
+    create_players
+    set_names
+    players_take_turns
   end
 end
 
 class YahtzeeCard
+  attr_accessor :upper_section, :lower_section, :grand_total
+
   def initialize
     @upper_section = UpperSection.new
     @lower_section = LowerSection.new
@@ -40,15 +96,13 @@ class YahtzeeCard
 end
 
 class YahtzeeCup
+  attr_accessor :dice
+
   def initialize
     @dice = 5.times.with_object({}) { |num, arr| arr[num + 1] = Dice.new}
   end
 
-  def shake_cup
-
-  end
-
-  def throw_dice
+  def throw_dice(*dice)
 
   end
 end
@@ -67,7 +121,7 @@ end
 
 class Dice
   def roll
-    (1..6).sample
+    @value = (1..6).to_a.sample
   end
 end
 

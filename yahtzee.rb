@@ -9,11 +9,35 @@
 # Winner announced.
 # Play again?
 
+class YahtzeeGame
+  def initialize
+    @card = YahtzeeCard.new
+    @cup = YahtzeeCup.new
+    @players = []
+    require 'pry'
+    binding.pry
+  end
+end
+
 class YahtzeeCard
   def initialize
     @upper_section = UpperSection.new
     @lower_section = LowerSection.new
     @grand_total = 0
+  end
+end
+
+class YahtzeeCup
+  def initialize
+    @dice = 5.times.with_object({}) { |num, arr| arr[num + 1] = Dice.new}
+  end
+
+  def shake_cup
+
+  end
+
+  def throw_dice
+
   end
 end
 
@@ -35,4 +59,4 @@ class Dice
   end
 end
 
-YahtzeeCard.new
+YahtzeeGame.new

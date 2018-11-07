@@ -15,6 +15,20 @@ class YahtzeeGame
     @cup = YahtzeeCup.new
     @players = []
   end
+
+  def prompt_num_players
+    loop do
+      puts "How many people are playing today?"
+      @num_players = gets.chomp.to_i
+
+      break if @num_players > 0
+      puts "There has to be at least 1 player"
+    end
+  end
+
+  def play
+    prompt_num_players
+  end
 end
 
 class YahtzeeCard
@@ -57,4 +71,4 @@ class Dice
   end
 end
 
-YahtzeeGame.new
+YahtzeeGame.new.play

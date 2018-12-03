@@ -5,6 +5,10 @@ class Robot
     @speed = speed
     @tactics = tactics
   end
+
+  def attack
+
+  end
 end
 
 module DamageInfo
@@ -16,15 +20,17 @@ end
 class ThunderDome
   include DamageInfo
 
-  attr_reader :robots
-  
+  attr_accessor :robots
+
   def initialize(*robots)
     @robots = robots
   end
 
-  def fight(*robots)
+  def add_robot(robot); robots << robot end
+  def add_robots(robot_arr); self.robots += robot_arr end
 
-  end
+  def fight(*robots); end
+
 
   def match_up(*robots)
     @current_opponents = robots

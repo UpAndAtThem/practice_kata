@@ -1,24 +1,30 @@
-QUERY = ['API CALL RESULTS', nil, nil, nil, nil].freeze
-TRY_LIMIT = 3
+class MyCar
+  attr_accessor :color
+  attr_reader :year
 
-class ApiError < StandardError; end
+  def initialize(year, color, model)
+    @year = year
+    @color = color
+    @model = model
+    @current_speed = 0
+  end
 
-begin
-  tries ||= 1
-  response = QUERY.sample
+  def spray_paint(color)
+    self.color = color
+  end
 
-  raise ApiError if response.nil?
+  def speed_up(increase)
+    @current_speed += increase
+  end
 
-  response << '!'
-  puts response
+  def brake(decrease)
+    @current_speed -= decrease
+  end
 
-rescue ApiError
-  tries += 1
-  retry if tries <= TRY_LIMIT
-
-  puts 'ERROR ERROR API RESPONSE NOT YET RETRIEVED!'
-  
-ensure
-  puts 'This code always prints'
-
+  def shut_off
+    @current_speed = 0
+  end
 end
+
+require 'pry'
+binding.pry

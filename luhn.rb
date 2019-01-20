@@ -1,4 +1,5 @@
 require 'pry'
+
 class Luhn
   attr_reader :int_str, :numbers
 
@@ -17,13 +18,13 @@ class Luhn
 
   def doubling_operation(arr)
     arr.reverse.each_slice(2).map do |first, second|
-      next first unless second
- 
+      second = second.to_i
+
       second *= 2
       second -= 9 if second > 9
 
-      [first, second]
-    end.flatten
+      first + second
+    end
   end
 
   def sum_divisible_ten? numbers

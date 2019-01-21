@@ -1,5 +1,3 @@
-require 'pry'
-
 class Luhn
   attr_reader :int_str, :numbers
 
@@ -32,7 +30,7 @@ class Luhn
   end
 
   def valid?
-    return false if invalid_input?
+    return if invalid_input?
     doubled = doubling_operation numbers
     sum_divisible_ten? doubled
   end

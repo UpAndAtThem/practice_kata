@@ -1,37 +1,33 @@
 class Luhn
-  attr_reader :int_str, :numbers
+  def self.valid?(str)
+    new(str).valid?
+  end
 
   def initialize(str)
     @int_str = str.gsub(/\s/, '')
     @numbers = int_str.chars.map(&:to_i)
   end
 
-  def self.valid?(str)
-    Luhn.new(str).valid?
+  def valid?
+    return if invalid_input?
+    doubling_operation_sum(numbers).modulo(10).zero?
   end
 
+  private
+
+  attr_reader :int_str, :numbers
+  
   def invalid_input?
     int_str.length <= 1 || int_str.match(/[^0-9]/)
   end
 
-  def doubling_operation(arr)
-    arr.reverse.each_slice(2).map do |first, second|
-      second = second.to_i
+  def adjust_num(second)
+    second.digits.sum
+  end
 
-      second *= 2
-      second -= 9 if second > 9
-
-      first + second
+  def doubling_operation_sum(arr)
+    arr.reverse.each_slice(2).sum do |first, second = second.to_i|
+      first + adjust_num(second * 2)
     end
-  end
-
-  def sum_divisible_ten? numbers
-    numbers.sum % 10 == 0
-  end
-
-  def valid?
-    return if invalid_input?
-    doubled = doubling_operation numbers
-    sum_divisible_ten? doubled
   end
 end

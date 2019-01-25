@@ -4,13 +4,13 @@ class Luhn
   end
 
   def initialize(str)
-    @int_str = str.gsub(/\s/, '')
+    @int_str = str.delete(' ')
     @numbers = int_str.chars.map(&:to_i)
   end
 
   def valid?
     return if invalid_input?
-    doubling_operation_sum(numbers).modulo(10).zero?
+    luhn_sum(numbers).modulo(10).zero?
   end
 
   private
@@ -21,13 +21,9 @@ class Luhn
     int_str.length <= 1 || int_str.match(/[^0-9]/)
   end
 
-  def adjust_num(second)
-    second.digits.sum
-  end
-
-  def doubling_operation_sum(arr)
-    arr.reverse.each_slice(2).sum do |first, second = second.to_i|
-      first + adjust_num(second * 2)
+  def luhn_sum(arr)
+    arr.reverse.each_slice(2).sum do |first, second|
+      first + (second.to_i * 2).digits.sum
     end
   end
 end

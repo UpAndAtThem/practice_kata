@@ -2,7 +2,7 @@ class Phrase
   attr_reader :words
 
   def initialize(str)
-    @words = str.downcase.scan(/(\w+'\w+|\w+)/).flatten
+    @words = str.downcase.scan(/\w+'\w+|\w+/)
   end
 
   def word_count

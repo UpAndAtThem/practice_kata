@@ -1,8 +1,6 @@
 class Phrase
-  attr_reader :words
-
   def initialize(str)
-    @words = str.downcase.scan(/\w+'\w+|\w+/)
+    @words = str.downcase.scan(/\b[\w']+\b/)
   end
 
   def word_count
@@ -10,4 +8,8 @@ class Phrase
       word_hsh[word] += 1
     end
   end
+
+  private
+  
+  attr_reader :words
 end

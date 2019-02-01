@@ -1,5 +1,12 @@
+require 'simplecov'
+SimpleCov.start
+
 require 'minitest/autorun'
 require_relative 'team.rb'
+
+require "minitest/reporters"
+Minitest::Reporters.use!
+
 require 'pry'
 
 class TeamTest < MiniTest::Test
@@ -34,10 +41,11 @@ class TeamTest < MiniTest::Test
   end
 
   def test_display_info
-    output = StringIO.new
-    result = @vikings.display_info(output: output)
+    output = <<~DESC
+    The Minnesota Vikings are a professional American football team.
+    DESC
 
-    assert_output(@vikings.display_info(output: output)) { File.open('./describe_team.txt', 'r').read }
+    assert_output(output){ @vikings.display_info}
   end
 
   def test_each_player
@@ -53,9 +61,11 @@ class TeamTest < MiniTest::Test
 
   def test_buy_team
     output = StringIO.new
-    input = StringIO.new "100\n"
+    input = StringIO.new "0\n100\n"
 
     @vikings.buy_team(input: input, output: output)
     assert_equal(100, @vikings.purchase_price)
+
+
   end
 end

@@ -21,7 +21,6 @@ class Team
 
   def display_info(output: $stdout)
     output.puts @info.read
-    output
   end
 
   def each_player

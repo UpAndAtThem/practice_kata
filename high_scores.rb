@@ -22,10 +22,7 @@ class HighScores
   end
 
   def report
-    unless personal_best == latest
-      "Your latest score was #{latest}. That's #{personal_best - latest} short of your personal best!"
-    else
-      "Your latest score was #{latest}. That's your personal best!"
-    end
+    latest_difference = "#{personal_best - latest} short of " 
+    "Your latest score was #{latest}. That's #{latest_difference unless personal_best == latest}your personal best!"
   end
 end

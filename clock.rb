@@ -5,7 +5,7 @@ class Clock
   end
 
   def to_s
-    "#{hour_str[-2,2]}:#{minute_str[-2,2]}"
+    "#{hour_str[-2, 2]}:#{minute_str[-2, 2]}"
   end
 
   def -(other)
@@ -20,7 +20,7 @@ class Clock
   end
 
   def ==(other)
-    self.to_s == other.to_s
+    to_s == other.to_s
   end
 
   private
@@ -29,8 +29,8 @@ class Clock
   HOURS_IN_DAY = 24
   MINUTE_RANGE = (0..59)
 
-  def hour_adjusted(hour, minute)
-    (num_hours(minute) + hour) % HOURS_IN_DAY
+  def hour_adjusted(hours, minutes)
+    (num_hours(minutes) + hours) % HOURS_IN_DAY
   end
 
   def num_hours(minutes)
@@ -46,7 +46,7 @@ class Clock
   end
 
   def other_clock_mutation(other_hour, other_minute, minute_rollover)
-    self.hour = self.hour + minute_rollover unless MINUTE_RANGE.cover?(self.minute + other_minute)
+    self.hour = hour + minute_rollover unless MINUTE_RANGE.cover?(minute + other_minute)
 
     self.hour = (hour + other_hour) % 24
     self.minute = (minute + other_minute) % 60

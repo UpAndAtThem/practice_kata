@@ -42,4 +42,4 @@ def get_regex(expression)
   end
 end
 
-computer "six plus ten divided by two" #=> "11"
+p computer "six plus ten divided by two" #=> "11"

@@ -4,10 +4,14 @@ class Order
 
   def initialize(name)
     @name = name
-    @cart = []
+    @cart = {"Hamburger" => 6.99, "Fies" => 2.69, "Diet Coke" => 1.99}
   end
 
   def add_item(item)
     cart << item
+  end
+
+  def to_s
+    @cart.keys.join(", ") + "."
   end
 end

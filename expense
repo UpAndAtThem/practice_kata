@@ -1,0 +1,62 @@
+#! /usr/bin/env ruby
+require 'pg'
+require 'pry'
+
+class CLI
+  def initialize
+    @app = ExpenseData.new
+  end
+
+  def run(argv)
+    case argv.first
+    when 'list'
+      @app.list
+    when 'add'
+      @app.add(argv[1], argv[2])
+    when nil
+      puts documentation
+    end
+  end
+
+  def documentation
+    <<~DIRECTIONS
+    An expense recording system
+
+    Commands:
+
+    add AMOUNT MEMO [DATE] - record a new expense
+    clear - delete all expenses
+    list - list all expenses
+    delete NUMBER - remove expense with id NUMBER
+    search QUERY - list expenses with a matching memo field
+
+    DIRECTIONS
+  end
+end
+
+class ExpenseData
+  def initialize
+    @conn = PG.connect(dbname: "expense")
+  end
+
+  def add(amount, memo)
+    return "You need an amount and memo" if [amount, memo].any? { |arg| arg.nil? }
+    insert_statement = "INSERT INTO expenses (amount, memo) VALUES ($1, $2)"
+    @conn.exec_params(insert_statement, [amount, memo])
+  end
+
+  def list
+    res = @conn.exec('SELECT * FROM expenses')
+
+    res.each do |tuple|
+      columns = [ tuple["id"].rjust(3),
+                  tuple["created_on"].rjust(10),
+                  tuple["amount"].rjust(8),
+                  tuple["memo"]]
+
+      puts columns.join(" | ")
+    end
+  end
+end
+
+CLI.new.run(ARGV)

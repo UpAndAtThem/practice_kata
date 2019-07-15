@@ -13,6 +13,10 @@ class CLI
       @app.list
     when 'add'
       @app.add(argv[1], argv[2])
+    when 'delete'
+      @app.delete(argv[1])
+    when 'search'
+      @app.search(argv[1])
     when nil
       puts documentation
     end
@@ -45,9 +49,36 @@ class ExpenseData
     @conn.exec_params(insert_statement, [amount, memo])
   end
 
+  def delete(tuple_id)
+    select_query = "SELECT * FROM expenses WHERE id = $1"
+    tuple_for_deletion = @conn.exec_params(select_query, [tuple_id])
+
+    if tuple_for_deletion.values.empty?
+      puts("There is no expense with that ID") 
+    else
+      delete_query = "DELETE FROM expenses WHERE id = $1"
+      @conn.exec_params(delete_query, [tuple_id])
+
+      puts "The following expense has been deleted:"
+      display_query(tuple_for_deletion)
+    end
+  end
+
+  def search(memo)
+    search_query = "SELECT * FROM expenses WHERE memo ILIKE $1"
+    res = @conn.exec_params(search_query, ["%#{memo}%"])
+    display_query(res)
+  end
+
   def list
     res = @conn.exec('SELECT * FROM expenses')
 
+    display_query(res)
+  end
+
+  private
+
+  def display_query(res)
     res.each do |tuple|
       columns = [ tuple["id"].rjust(3),
                   tuple["created_on"].rjust(10),

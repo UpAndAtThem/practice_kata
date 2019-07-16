@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 require 'pg'
 require 'pry'
+require 'io/console'
 
 class CLI
   def initialize
@@ -17,6 +18,8 @@ class CLI
       @app.delete(argv[1])
     when 'search'
       @app.search(argv[1])
+    when 'clear'
+      @app.clear
     when nil
       puts documentation
     end
@@ -41,6 +44,30 @@ end
 class ExpenseData
   def initialize
     @conn = PG.connect(dbname: "expense")
+    setup_schema
+  end
+
+  def setup_schema
+    table_check_query = <<~TC
+                        SELECT COUNT(*)
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public' AND table_name = 'expenses'
+                        TC
+
+    create_table_sql = <<~CREATE_TABLE
+                         CREATE TABLE expenses (
+                           id serial PRIMARY KEY,
+                           amount numeric(6,2) NOT NULL CHECK(amount >= 0.01),
+                           memo text NOT NULL,
+                           created_on date NOT NULL DEFAULT NOW()
+                         )
+                         CREATE_TABLE
+
+    has_table = @conn.exec(table_check_query)
+
+    unless has_table.values.first.first == '1'
+      @conn.exec(create_table_sql)
+    end
   end
 
   def add(amount, memo)
@@ -64,6 +91,18 @@ class ExpenseData
     end
   end
 
+  def clear
+    puts "Are you sure you want to delete all expenses? (y/n)"
+    response = $stdin.getch
+
+    if response == 'y'
+      @conn.exec("DELETE FROM expenses")
+      puts "All expenses were deleted"
+    else
+      puts "No expenses were deleted."
+    end
+  end
+
   def search(memo)
     search_query = "SELECT * FROM expenses WHERE memo ILIKE $1"
     res = @conn.exec_params(search_query, ["%#{memo}%"])
@@ -79,14 +118,30 @@ class ExpenseData
   private
 
   def display_query(res)
-    res.each do |tuple|
-      columns = [ tuple["id"].rjust(3),
-                  tuple["created_on"].rjust(10),
-                  tuple["amount"].rjust(8),
-                  tuple["memo"]]
+    if res.values.empty?
+      puts "There are no expenses"
+    else
+      res.each do |tuple|
+        columns = [ tuple["id"].rjust(3),
+                    tuple["created_on"].rjust(10),
+                    tuple["amount"].rjust(8),
+                    tuple["memo"]]
 
-      puts columns.join(" | ")
+        puts columns.join(" | ")
+      end
+
+      display_count(res)
     end
+  end
+
+  def display_count(res)
+    puts "-" * 50
+
+    puts "There are #{res.count} expenses"
+    amounts = res.map { |row| row["amount"].to_f }
+    sum = sprintf("%0.02f", amounts.reduce(&:+))
+
+    puts "Total" + sum.rjust(22)
   end
 end
 

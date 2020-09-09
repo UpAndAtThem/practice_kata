@@ -1,12 +1,17 @@
-function printFibonacci(last, secondLast) {
-  // The code above the recursive function call will be in descending order.
-  if ( last == 1 && secondLast == 0 ){
-    console.log(1);
-    return;
+const memoFib = function() {
+  let memo = {}
+  
+  return function fib(n) {
+    if (n in memo) { return memo[n] }
+    else { 
+      if (n <= 1) { memo[n] = n } 
+      else { memo[n] = fib(n - 1) + fib(n - 2) } 
+      return memo[n]
+    }
   }
+ }
 
-  printFibonacci(secondLast, last - secondLast);
 
-  console.log(last);
-}
-printFibonacci(55,34);
+let mFib = memoFib();
+
+console.log(mFib(5))
